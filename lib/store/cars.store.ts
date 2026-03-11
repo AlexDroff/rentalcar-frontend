@@ -46,7 +46,7 @@ export const useCarsStore = create<CarsStore>((set, get) => ({
     try {
       set({ loading: true, error: null });
 
-      const { filters } = get();
+      const { filters, cars } = get();
 
       const response = await carsService.getCars(
         filters,
@@ -54,21 +54,15 @@ export const useCarsStore = create<CarsStore>((set, get) => ({
         ITEMS_PER_PAGE
       );
 
-      if (pageNum === 1) {
-        set({
-          cars: response.cars,
-          page: response.page,
-          totalPages: response.totalPages,
-          loading: false,
-        });
-      } else {
-        set((state) => ({
-          cars: [...state.cars, ...response.cars],
-          page: response.page,
-          totalPages: response.totalPages,
-          loading: false,
-        }));
-      }
+      const newCars =
+        pageNum === 1 ? response.cars : [...cars, ...response.cars];
+
+      set({
+        cars: newCars,
+        page: pageNum,
+        totalPages: response.totalPages,
+        loading: false,
+      });
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : 'Failed to fetch cars',
@@ -79,11 +73,7 @@ export const useCarsStore = create<CarsStore>((set, get) => ({
 
   fetchCarById: async (id: string) => {
     try {
-      set({
-        loading: true,
-        error: null,
-        selectedCar: null,
-      });
+      set({ loading: true, error: null, selectedCar: null });
 
       const car = await carsService.getCarById(id);
 
@@ -115,12 +105,14 @@ export const useCarsStore = create<CarsStore>((set, get) => ({
     set({
       filters,
       page: 1,
+      cars: [],
     });
   },
 
   loadMoreCars: async () => {
     const { page } = get();
     const nextPage = page + 1;
+
     await get().fetchCars(nextPage);
   },
 

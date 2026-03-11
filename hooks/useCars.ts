@@ -25,9 +25,9 @@ export const useCars = () => {
   }, [fetchBrands, loadFavorites]);
 
   const setFilters = useCallback(
-    (newFilters: CarsFilters) => {
+    async (newFilters: CarsFilters) => {
       setStoreFilters(newFilters);
-      fetchCars(1);
+      await fetchCars(1);
     },
     [setStoreFilters, fetchCars]
   );

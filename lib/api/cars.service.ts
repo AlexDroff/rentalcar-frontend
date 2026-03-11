@@ -9,8 +9,8 @@ interface GetCarsResponse {
 }
 
 type CarsQueryParams = {
-  page: number;
-  limit: number;
+  page: string;
+  limit: string;
   brand?: string;
   rentalPrice?: string;
   minMileage?: string;
@@ -24,25 +24,14 @@ export const carsService = {
     limit: number = 12
   ): Promise<GetCarsResponse> {
     const params: CarsQueryParams = {
-      page,
-      limit,
+      page: String(page),
+      limit: String(limit),
     };
 
-    if (filters?.brand) {
-      params.brand = filters.brand;
-    }
-
-    if (filters?.rentalPrice) {
-      params.rentalPrice = filters.rentalPrice;
-    }
-
-    if (filters?.minMileage) {
-      params.minMileage = filters.minMileage;
-    }
-
-    if (filters?.maxMileage) {
-      params.maxMileage = filters.maxMileage;
-    }
+    if (filters?.brand) params.brand = filters.brand;
+    if (filters?.rentalPrice) params.rentalPrice = filters.rentalPrice;
+    if (filters?.minMileage) params.minMileage = filters.minMileage;
+    if (filters?.maxMileage) params.maxMileage = filters.maxMileage;
 
     const response = await api.get<GetCarsResponse>('/cars', { params });
 
@@ -51,13 +40,11 @@ export const carsService = {
 
   async getCarById(id: string): Promise<Car> {
     const response = await api.get<Car>(`/cars/${id}`);
-
     return response.data;
   },
 
   async getBrands(): Promise<string[]> {
     const response = await api.get<string[]>('/brands');
-
     return response.data;
   },
 };
