@@ -1,0 +1,23 @@
+import type { InputHTMLAttributes } from 'react';
+import styles from './Input.module.css';
+
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  label?: string;
+  error?: string;
+}
+
+export const Input = ({ label, error, className, ...props }: InputProps) => {
+  const classes = [styles.input, error ? styles.error : '', className ?? '']
+    .filter(Boolean)
+    .join(' ');
+
+  return (
+    <div className={styles.wrapper}>
+      {label && <label className={styles.label}>{label}</label>}
+
+      <input className={classes} {...props} />
+
+      {error && <span className={styles.errorMessage}>{error}</span>}
+    </div>
+  );
+};

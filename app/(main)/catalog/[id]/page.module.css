@@ -1,0 +1,32 @@
+.container {
+  width: 100%;
+  padding-top: 20px;
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 1fr 350px;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.form {
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .content {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .content {
+    gap: 24px;
+    padding: 0 12px;
+  }
+}

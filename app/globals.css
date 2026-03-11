@@ -1,13 +1,24 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --font-main: 'Manrope', sans-serif;
+  --color-primary: #3470ff;
+  --color-primary-hover: #0b44cd;
+
+  --color-text-main: #121417;
+  --color-text-secondary: #8a8a89;
+
+  --color-bg-main: #ffffff;
+  --color-bg-light: #f7f7f7;
+
+  --color-border: #dadde1;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* simple reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html,
@@ -17,17 +28,13 @@ body {
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-main);
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text-main);
+  background: var(--color-bg-main);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
 }
 
 a {
@@ -35,8 +42,14 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+.container {
+  max-width: 1184px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.pageTitle {
+  margin-bottom: 30px;
+  font-size: 32px;
+  font-weight: 700;
 }
