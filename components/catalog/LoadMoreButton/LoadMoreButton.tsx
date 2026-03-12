@@ -15,14 +15,17 @@ export const LoadMoreButton: React.FC<LoadMoreButtonProps> = ({
   isVisible,
   isLoading,
 }) => {
-  if (!isVisible) {
-    return null;
-  }
+  if (!isVisible) return null;
 
   return (
     <div className={styles.wrapper}>
-      <Button onClick={onLoadMore} disabled={isLoading} variant="primary">
-        {isLoading ? <Loader size="small" /> : 'Load More'}
+      <Button
+        onClick={onLoadMore}
+        disabled={isLoading}
+        variant="outlined"
+        className={styles.button}
+      >
+        {isLoading ? <Loader size="small" /> : 'Load more'}
       </Button>
     </div>
   );

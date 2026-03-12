@@ -1,24 +1,34 @@
 :root {
-  --font-main: 'Manrope', sans-serif;
-  --color-primary: #3470ff;
-  --color-primary-hover: #0b44cd;
+  /* colors */
+  --main: #101828;
+  --gray: #8d929a;
+  --gray-light: #dadde1;
+  --badges: #f2f4f7;
+  --inputs: #f7f7f7;
+  --white: #fff;
+  --button: #3470ff;
+  --button-hover: #0b44cd;
+  --light-blue: #00aad4;
+  --bg: #f5f5f5;
 
-  --color-text-main: #121417;
-  --color-text-secondary: #8a8a89;
+  /* fonts */
+  --font-family: 'Manrope', sans-serif;
+  --second-family: 'Inter', sans-serif;
 
-  --color-bg-main: #ffffff;
-  --color-bg-light: #f7f7f7;
-
-  --color-border: #dadde1;
+  /* radius */
+  --radius-button: 12px;
+  --radius-input: 12px;
+  --radius-card-image: 14px;
 }
 
-/* simple reset */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+}
+
+* {
   margin: 0;
-  padding: 0;
 }
 
 html,
@@ -28,28 +38,106 @@ body {
 }
 
 body {
-  font-family: var(--font-main);
+  font-family: var(--font-family);
+  font-weight: 500;
   font-size: 16px;
-  line-height: 1.5;
-  color: var(--color-text-main);
-  background: var(--color-bg-main);
+  line-height: 1.25;
+  color: var(--main);
+  background: var(--white);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-a {
-  color: inherit;
-  text-decoration: none;
+main {
+  padding-top: 84px;
 }
 
+/* links */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* button base */
+button {
+  border: none;
+  background: none;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+/* inputs */
+input,
+select {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.25;
+  color: var(--main);
+  border: none;
+  outline: none;
+}
+
+input::placeholder {
+  color: var(--main);
+}
+
+/* images */
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* lists */
+ul,
+ol {
+  list-style: none;
+}
+
+/* layout */
 .container {
   max-width: 1184px;
   margin: 0 auto;
-  padding: 0 24px;
 }
 
+/* typography */
+.h1 {
+  font-weight: 700;
+  font-size: 60px;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--white);
+}
+
+.h2 {
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.33333;
+  text-align: center;
+  color: var(--white);
+}
+
+.bodyText {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.25;
+  color: var(--main);
+}
+
+.smallText {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.33333;
+  color: var(--gray);
+}
+
+.accent {
+  color: var(--button);
+}
+
+/* page title */
 .pageTitle {
-  margin-bottom: 30px;
+  margin-bottom: 32px;
   font-size: 32px;
   font-weight: 700;
+  color: var(--main);
 }

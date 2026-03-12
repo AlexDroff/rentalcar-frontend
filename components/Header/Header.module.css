@@ -1,0 +1,29 @@
+.header {
+  border-bottom: 1px solid var(--badges);
+  padding-block: 24px;
+  background: var(--badges);
+}
+
+.header :global(.container) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.navigation {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.navigationLink {
+  font-family: var(--font-family);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.25;
+  color: var(--main);
+}
+
+.navigationLink:hover {
+  color: var(--button);
+}

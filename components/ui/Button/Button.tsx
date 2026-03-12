@@ -3,7 +3,7 @@ import styles from './Button.module.css';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
-  variant?: 'primary' | 'secondary' | 'outlined';
+  variant?: 'primary' | 'outlined';
   fullWidth?: boolean;
   size?: 'small' | 'medium' | 'large';
 }

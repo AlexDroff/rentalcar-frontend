@@ -1,45 +1,34 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { CarFilters } from '@/components/catalog/CarFilters/CarFilters';
 import { CarList } from '@/components/catalog/CarList/CarList';
 import { LoadMoreButton } from '@/components/catalog/LoadMoreButton/LoadMoreButton';
-import { useCars } from '@/hooks/useCars';
+import { useCarsStore } from '@/lib/store/cars.store';
 
 export default function CatalogPageClient() {
-  const hasFetched = useRef(false);
-
-  const {
-    cars = [],
-    loading,
-    page,
-    totalPages,
-    brands,
-    fetchCars,
-    loadMoreCars,
-    setFilters,
-    error,
-  } = useCars();
+  const cars = useCarsStore((state) => state.cars);
+  const loading = useCarsStore((state) => state.loading);
+  const page = useCarsStore((state) => state.page);
+  const totalPages = useCarsStore((state) => state.totalPages);
+  const brands = useCarsStore((state) => state.brands);
+  const fetchCars = useCarsStore((state) => state.fetchCars);
+  const loadMoreCars = useCarsStore((state) => state.loadMoreCars);
+  const setFilters = useCarsStore((state) => state.setFilters);
+  const error = useCarsStore((state) => state.error);
 
   useEffect(() => {
-    if (!hasFetched.current) {
-      fetchCars();
-      hasFetched.current = true;
-    }
+    fetchCars(1);
   }, [fetchCars]);
 
   return (
     <div className="container">
-      <h1 className="pageTitle">Our Cars</h1>
-
       <CarFilters brands={brands} onFilter={setFilters} />
 
       {error && <div className="error">{error}</div>}
 
-      {/* Skeleton loading */}
       <CarList cars={cars} loading={loading && cars.length === 0} />
 
-      {/* Load more */}
       <LoadMoreButton
         onLoadMore={loadMoreCars}
         isVisible={page < totalPages}

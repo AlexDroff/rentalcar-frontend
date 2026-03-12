@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Hero } from '@/components/home/Hero/Hero';
+import { Hero } from '@/components/Hero/Hero';
 
 export const metadata: Metadata = {
   title: 'Find Your Perfect Rental Car',
@@ -9,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return <Hero />;
+  return (
+    <div className="container">
+      <Hero />
+    </div>
+  );
 }

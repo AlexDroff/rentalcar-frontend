@@ -12,7 +12,7 @@ interface CarListProps {
 
 export const CarList: React.FC<CarListProps> = ({ cars, loading = false }) => {
   // Skeleton loading
-  if (loading) {
+  if (loading && cars.length === 0) {
     return (
       <div className={styles.grid}>
         {Array.from({ length: 8 }).map((_, index) => (
@@ -22,7 +22,6 @@ export const CarList: React.FC<CarListProps> = ({ cars, loading = false }) => {
     );
   }
 
-  // Empty state
   if (cars.length === 0) {
     return (
       <div className={styles.empty}>

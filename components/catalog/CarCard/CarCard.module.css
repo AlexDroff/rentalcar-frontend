@@ -1,67 +1,90 @@
 .card {
-  position: relative;
-  background: white;
-  border-radius: 14px;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  gap: 16px;
+  width: 276px;
 }
 
 .imageWrapper {
   position: relative;
-  width: 100%;
-  height: 260px;
+  width: 276px;
+  height: 268px;
+  border-radius: 14px;
+  overflow: hidden;
 }
-
 .image {
   object-fit: cover;
-  border-radius: 14px 14px 0 0;
-}
-
-.content {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.title {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--color-main);
-}
-
-.meta {
-  font-size: 12px;
-  color: var(--color-gray);
-  line-height: 1.4;
 }
 
 .favorite {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+  top: 16px;
+  right: 16px;
+  background: transparent;
   border: none;
-  background: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-.favorite:hover {
-  transform: scale(1.1);
+.favoriteIconFilled {
+  width: 16px;
+  height: 16px;
+  fill: var(--button);
+}
+
+.favoriteIconOutlined {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: var(--white);
+  stroke-width: 1.5px;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title {
+  font-family: var(--font-main);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.25;
+  color: var(--main);
+}
+
+.model {
+  color: var(--button);
+}
+
+.price {
+  font-family: var(--font-main);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.25;
+  color: var(--main);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  font-family: var(--font-main);
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.333;
+
+  color: var(--gray);
+}
+
+.meta span:not(:last-child)::after {
+  content: '|';
+  margin-left: 6px;
 }

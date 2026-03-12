@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Input } from '@/components/ui/Input/Input';
 import { Button } from '@/components/ui/Button/Button';
 import { useDebounce } from '@/hooks/useDebounce';
 import type { CarsFilters } from '@/types/car';
@@ -57,29 +56,23 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
     }));
   };
 
-  const handleReset = () => {
-    const empty: CarsFilters = {};
-
-    setFilters(empty);
-
-    onFilter(empty);
-  };
-
   return (
     <div className={styles.filters}>
+      {' '}
       <div className={styles.form}>
+        {' '}
         <div className={styles.group}>
+          {' '}
           <label htmlFor="brand-select" className={styles.label}>
-            Brand
+            Car brand{' '}
           </label>
-
           <select
             id="brand-select"
             value={filters.brand || ''}
             onChange={handleBrandChange}
             className={styles.select}
           >
-            <option value="">All Brands</option>
+            <option value="">Choose a brand</option>
 
             {brands.map((brand) => (
               <option key={brand} value={brand}>
@@ -88,10 +81,9 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
             ))}
           </select>
         </div>
-
         <div className={styles.group}>
           <label htmlFor="price-select" className={styles.label}>
-            Price
+            Price / 1 hour
           </label>
 
           <select
@@ -100,44 +92,39 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
             onChange={handlePriceChange}
             className={styles.select}
           >
-            <option value="">Any Price</option>
+            <option value="">Choose a price</option>
 
-            <option value="30">Up to 30</option>
-            <option value="40">Up to 40</option>
-            <option value="50">Up to 50</option>
-            <option value="60">Up to 60</option>
-            <option value="70">Up to 70</option>
-            <option value="80">Up to 80</option>
+            <option value="30">30</option>
+            <option value="40">40</option>
+            <option value="50">50</option>
+            <option value="60">60</option>
+            <option value="70">70</option>
+            <option value="80">80</option>
           </select>
         </div>
-
         <div className={styles.group}>
-          <Input
-            type="number"
-            placeholder="Min Mileage"
-            value={filters.minMileage || ''}
-            onChange={handleMinMileageChange}
-          />
-        </div>
+          <label className={styles.label}>Car mileage / km</label>
 
-        <div className={styles.group}>
-          <Input
-            type="number"
-            placeholder="Max Mileage"
-            value={filters.maxMileage || ''}
-            onChange={handleMaxMileageChange}
-          />
-        </div>
+          <div className={styles.mileage}>
+            <input
+              type="number"
+              placeholder="From"
+              value={filters.minMileage || ''}
+              onChange={handleMinMileageChange}
+              className={styles.mileageInput}
+            />
 
+            <input
+              type="number"
+              placeholder="To"
+              value={filters.maxMileage || ''}
+              onChange={handleMaxMileageChange}
+              className={styles.mileageInput}
+            />
+          </div>
+        </div>
         <div className={styles.actions}>
-          <Button
-            type="button"
-            variant="outlined"
-            fullWidth
-            onClick={handleReset}
-          >
-            Reset
-          </Button>
+          <Button variant="primary">Search</Button>
         </div>
       </div>
     </div>

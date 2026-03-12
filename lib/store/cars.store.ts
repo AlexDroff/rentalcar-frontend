@@ -105,8 +105,9 @@ export const useCarsStore = create<CarsStore>((set, get) => ({
     set({
       filters,
       page: 1,
-      cars: [],
     });
+
+    get().fetchCars(1);
   },
 
   loadMoreCars: async () => {
