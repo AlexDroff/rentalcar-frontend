@@ -1,120 +1,135 @@
 .form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin-top: 24px;
-  background-color: #f9f9f9;
+  gap: 24px;
+
+  border: 1px solid var(--badges);
   border-radius: 12px;
-  padding: 24px;
-  position: sticky;
-  top: 100px;
+
+  padding: 32px;
+
+  width: 640px;
+  height: 488px;
+
+  background: var(--white);
 }
 
-.form input,
-.form textarea {
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
-  padding: 12px;
-}
+/* HEADER */
 
-.title {
-  font-size: 20px;
-  font-weight: 700;
-  margin: 0 0 8px 0;
-  color: #333;
-}
-
-.formGroup {
+.header {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.label {
-  font-size: 14px;
+.title {
   font-weight: 600;
-  color: #333;
+  font-size: 20px;
+  line-height: 1.2;
+  color: var(--main);
 }
+
+.subtitle {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.25;
+  color: var(--gray);
+}
+
+/* TEXTAREA */
 
 .textarea {
-  padding: 10px 12px;
-  font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  outline: none;
-  transition: border-color 0.3s ease;
-  font-family: inherit;
-  resize: vertical;
-}
+  width: 100%;
+  height: 88px;
 
-.textarea:focus {
-  border-color: #0066cc;
-  box-shadow: 0 0 0 2px rgba(0, 102, 204, 0.1);
-}
+  padding: 12px 20px;
 
-.success {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   border-radius: 12px;
-  padding: 40px 24px;
-  text-align: center;
-  color: white;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  position: sticky;
-  top: 100px;
+  border: none;
+
+  background: var(--inputs);
+
+  font-family: var(--font-family);
+  font-size: 16px;
+
+  resize: none;
 }
 
-.successIcon {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.2);
+.textarea::placeholder {
+  color: var(--gray);
+}
+
+.dateWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.dateInput {
+  width: 100%;
+  height: 48px;
+
+  padding: 12px 20px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: var(--inputs);
+
+  font-family: var(--font-family);
+  font-size: 16px;
+
+  color: var(--main);
+}
+
+.datePlaceholder {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  color: var(--gray);
+  pointer-events: none;
+
+  font-size: 16px;
+}
+
+.buttonWrapper {
   display: flex;
-  align-items: center;
   justify-content: center;
-  margin: 0 auto;
-  font-size: 32px;
-  font-weight: 700;
 }
 
-.successTitle {
-  font-size: 20px;
-  font-weight: 700;
-  margin: 0;
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }
 
-.successMessage {
-  font-size: 14px;
-  margin: 0;
-  opacity: 0.95;
-  line-height: 1.6;
+.dateInput {
+  width: 100%;
+  height: 48px;
+
+  padding: 12px 20px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: var(--inputs);
+
+  font-family: var(--font-family);
+  font-size: 16px;
+
+  color: var(--main);
 }
 
-@media (max-width: 1024px) {
-  .form,
-  .success {
-    position: static;
-  }
+.dateInput:invalid {
+  color: transparent;
 }
 
-@media (max-width: 640px) {
-  .form,
-  .success {
-    padding: 20px 16px;
-  }
-
-  .title {
-    font-size: 18px;
-  }
-
-  .success {
-    padding: 30px 20px;
-  }
-
-  .successIcon {
-    width: 56px;
-    height: 56px;
-    font-size: 28px;
-  }
+.dateInput:valid {
+  color: var(--main);
 }

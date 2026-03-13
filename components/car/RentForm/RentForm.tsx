@@ -24,15 +24,6 @@ export const RentForm = ({ carId }: RentFormProps) => {
     comment: '',
   });
 
-  const [errors, setErrors] = useState<{ email?: string }>({});
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const validateEmail = (email: string) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-  };
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -42,107 +33,100 @@ export const RentForm = ({ carId }: RentFormProps) => {
       ...prev,
       [name]: value,
     }));
-
-    if (name === 'email') {
-      if (!validateEmail(value)) {
-        setErrors({ email: 'Please enter a valid email address' });
-      } else {
-        setErrors({});
-      }
-    }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!validateEmail(formData.email)) {
-      setErrors({ email: 'Please enter a valid email address' });
-      return;
-    }
+    try {
+      const res = await fetch('/api/book-car', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          carId,
+          ...formData,
+        }),
+      });
 
-    setLoading(true);
+      if (!res.ok) {
+        throw new Error('Failed to send booking');
+      }
 
-    await new Promise((resolve) => setTimeout(resolve, 800));
+      console.log('Booking request sent');
 
-    setSubmitted(true);
-    setLoading(false);
-
-    setTimeout(() => {
       setFormData({
         name: '',
         email: '',
         bookingDate: '',
         comment: '',
       });
-      setSubmitted(false);
-    }, 3000);
+    } catch (error) {
+      console.error('Booking error:', error);
+    }
   };
-
-  if (submitted) {
-    return (
-      <div className={styles.success}>
-        <div className={styles.successIcon}>✓</div>
-
-        <h3 className={styles.successTitle}>Booking Submitted!</h3>
-
-        <p className={styles.successMessage}>
-          Thank you for your booking request. We will contact you soon to
-          confirm your reservation.
-        </p>
-      </div>
-    );
-  }
 
   return (
     <form onSubmit={handleSubmit} className={styles.form}>
-      <h3 className={styles.title}>Book This Car</h3>
+      <div className={styles.header}>
+        <h3 className={styles.title}>Book your car now</h3>
+        <p className={styles.subtitle}>
+          Stay connected! We are always ready to help you.
+        </p>
+      </div>
 
       <Input
         type="text"
         name="name"
-        placeholder="Your Name"
+        placeholder="Name*"
         value={formData.name}
         onChange={handleChange}
-        label="Full Name"
         required
       />
 
       <Input
         type="email"
         name="email"
-        placeholder="your@email.com"
+        placeholder="Email*"
         value={formData.email}
         onChange={handleChange}
-        label="Email"
-        error={errors.email}
         required
       />
 
-      <Input
-        type="date"
-        name="bookingDate"
-        value={formData.bookingDate}
-        onChange={handleChange}
-        label="Booking Date"
-        required
-      />
+      <div className={styles.dateWrapper}>
+        {!formData.bookingDate && (
+          <span className={styles.datePlaceholder}>Booking date</span>
+        )}
 
-      <div className={styles.formGroup}>
-        <label className={styles.label}>Additional Comments</label>
+        <label htmlFor="bookingDate" className={styles.visuallyHidden}>
+          Booking date
+        </label>
 
-        <textarea
-          name="comment"
-          placeholder="Any special requests..."
-          value={formData.comment}
+        <input
+          id="bookingDate"
+          type="date"
+          name="bookingDate"
+          value={formData.bookingDate}
           onChange={handleChange}
-          className={styles.textarea}
-          rows={4}
+          className={styles.dateInput}
+          required
         />
       </div>
 
-      <Button type="submit" variant="primary" fullWidth disabled={loading}>
-        {loading ? 'Submitting...' : 'Request Booking'}
-      </Button>
+      <textarea
+        name="comment"
+        placeholder="Comment"
+        value={formData.comment}
+        onChange={handleChange}
+        className={styles.textarea}
+      />
+
+      <div className={styles.buttonWrapper}>
+        <Button type="submit" variant="primary" size="small">
+          Send
+        </Button>
+      </div>
     </form>
   );
 };

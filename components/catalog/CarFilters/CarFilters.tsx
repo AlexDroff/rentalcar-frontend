@@ -11,6 +11,12 @@ interface CarFiltersProps {
   onFilter: (filters: CarsFilters) => void;
 }
 
+const formatNumber = (value: string) => {
+  const num = value.replace(/,/g, '');
+  if (!num) return '';
+  return Number(num).toLocaleString('en-US');
+};
+
 export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
   const [filters, setFilters] = useState<CarsFilters>({});
 
@@ -39,33 +45,32 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
   };
 
   const handleMinMileageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value || undefined;
+    const raw = e.target.value.replace(/,/g, '');
 
     setFilters((prev) => ({
       ...prev,
-      minMileage: value,
+      minMileage: raw,
     }));
   };
 
   const handleMaxMileageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value || undefined;
+    const raw = e.target.value.replace(/,/g, '');
 
     setFilters((prev) => ({
       ...prev,
-      maxMileage: value,
+      maxMileage: raw,
     }));
   };
 
   return (
     <div className={styles.filters}>
-      {' '}
       <div className={styles.form}>
-        {' '}
+        {/* BRAND */}
         <div className={styles.group}>
-          {' '}
           <label htmlFor="brand-select" className={styles.label}>
-            Car brand{' '}
+            Car brand
           </label>
+
           <select
             id="brand-select"
             value={filters.brand || ''}
@@ -81,6 +86,8 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
             ))}
           </select>
         </div>
+
+        {/* PRICE */}
         <div className={styles.group}>
           <label htmlFor="price-select" className={styles.label}>
             Price / 1 hour
@@ -94,37 +101,46 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
           >
             <option value="">Choose a price</option>
 
-            <option value="30">30</option>
-            <option value="40">40</option>
-            <option value="50">50</option>
-            <option value="60">60</option>
-            <option value="70">70</option>
-            <option value="80">80</option>
+            {[30, 40, 50, 60, 70, 80].map((price) => {
+              const priceStr = String(price);
+
+              return (
+                <option key={price} value={priceStr}>
+                  {filters.rentalPrice === priceStr ? `To $${price}` : price}
+                </option>
+              );
+            })}
           </select>
         </div>
+
+        {/* MILEAGE */}
         <div className={styles.group}>
           <label className={styles.label}>Car mileage / km</label>
 
           <div className={styles.mileage}>
             <input
-              type="number"
+              type="text"
               placeholder="From"
-              value={filters.minMileage || ''}
+              value={filters.minMileage ? formatNumber(filters.minMileage) : ''}
               onChange={handleMinMileageChange}
               className={styles.mileageInput}
             />
 
             <input
-              type="number"
+              type="text"
               placeholder="To"
-              value={filters.maxMileage || ''}
+              value={filters.maxMileage ? formatNumber(filters.maxMileage) : ''}
               onChange={handleMaxMileageChange}
               className={styles.mileageInput}
             />
           </div>
         </div>
+
+        {/* BUTTON */}
         <div className={styles.actions}>
-          <Button variant="primary">Search</Button>
+          <Button variant="primary" size="small">
+            Search
+          </Button>
         </div>
       </div>
     </div>

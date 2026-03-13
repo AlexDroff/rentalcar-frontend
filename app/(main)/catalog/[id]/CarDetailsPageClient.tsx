@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { CarDetails } from '@/components/car/CarDetails/CarDetails';
-import { RentForm } from '@/components/car/RentForm/RentForm';
 import { Loader } from '@/components/ui/Loader/Loader';
 import { useCarsStore } from '@/lib/store/cars.store';
 import styles from './page.module.css';
@@ -30,10 +29,6 @@ export default function CarDetailsPageClient() {
     <div className={styles.container}>
       <div className={styles.content}>
         <CarDetails car={selectedCar} />
-
-        <div className={styles.form}>
-          <RentForm carId={carId} />
-        </div>
       </div>
     </div>
   );
