@@ -9,9 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return (
-    <div className="container">
-      <Hero />
-    </div>
-  );
+  return <Hero />;
 }

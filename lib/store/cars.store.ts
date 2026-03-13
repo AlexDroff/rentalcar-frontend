@@ -19,7 +19,9 @@ interface CarsStore {
   fetchCarById: (id: string) => Promise<void>;
   fetchBrands: () => Promise<void>;
 
-  setFilters: (filters: CarsFilters) => void;
+  setFilters: (filters: CarsFilters) => Promise<void>;
+  resetFilters: () => void;
+
   loadMoreCars: () => Promise<void>;
 
   toggleFavorite: (carId: string) => void;
@@ -101,18 +103,32 @@ export const useCarsStore = create<CarsStore>((set, get) => ({
     }
   },
 
-  setFilters: (filters: CarsFilters) => {
+  setFilters: async (filters: CarsFilters) => {
     set({
       filters,
       page: 1,
+      cars: [],
     });
 
-    get().fetchCars(1);
+    await get().fetchCars(1);
+  },
+
+  resetFilters: () => {
+    set({
+      filters: {},
+      cars: [],
+      page: 1,
+    });
   },
 
   loadMoreCars: async () => {
-    const { page } = get();
+    const { page, totalPages, loading } = get();
+
+    if (loading) return;
+
     const nextPage = page + 1;
+
+    if (nextPage > totalPages) return;
 
     await get().fetchCars(nextPage);
   },

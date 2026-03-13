@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/Button/Button';
-import { useDebounce } from '@/hooks/useDebounce';
 import type { CarsFilters } from '@/types/car';
 import styles from './CarFilters.module.css';
 
@@ -19,12 +18,6 @@ const formatNumber = (value: string) => {
 
 export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
   const [filters, setFilters] = useState<CarsFilters>({});
-
-  const debouncedFilters = useDebounce(filters);
-
-  useEffect(() => {
-    onFilter(debouncedFilters);
-  }, [debouncedFilters, onFilter]);
 
   const handleBrandChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value || undefined;
@@ -46,20 +39,26 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
 
   const handleMinMileageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value.replace(/,/g, '');
+    const numeric = raw.replace(/\D/g, '');
 
     setFilters((prev) => ({
       ...prev,
-      minMileage: raw,
+      minMileage: numeric,
     }));
   };
 
   const handleMaxMileageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value.replace(/,/g, '');
+    const numeric = raw.replace(/\D/g, '');
 
     setFilters((prev) => ({
       ...prev,
-      maxMileage: raw,
+      maxMileage: numeric,
     }));
+  };
+
+  const handleSearch = () => {
+    onFilter(filters);
   };
 
   return (
@@ -138,7 +137,7 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
 
         {/* BUTTON */}
         <div className={styles.actions}>
-          <Button variant="primary" size="small">
+          <Button variant="primary" size="small" onClick={handleSearch}>
             Search
           </Button>
         </div>

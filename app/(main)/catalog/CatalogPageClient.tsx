@@ -5,6 +5,7 @@ import { CarFilters } from '@/components/catalog/CarFilters/CarFilters';
 import { CarList } from '@/components/catalog/CarList/CarList';
 import { LoadMoreButton } from '@/components/catalog/LoadMoreButton/LoadMoreButton';
 import { useCarsStore } from '@/lib/store/cars.store';
+import type { CarsFilters } from '@/types/car';
 
 export default function CatalogPageClient() {
   const cars = useCarsStore((state) => state.cars);
@@ -13,21 +14,24 @@ export default function CatalogPageClient() {
   const totalPages = useCarsStore((state) => state.totalPages);
   const brands = useCarsStore((state) => state.brands);
 
-  const fetchCars = useCarsStore((state) => state.fetchCars);
   const fetchBrands = useCarsStore((state) => state.fetchBrands);
 
   const loadMoreCars = useCarsStore((state) => state.loadMoreCars);
   const setFilters = useCarsStore((state) => state.setFilters);
   const error = useCarsStore((state) => state.error);
 
+  const handleFilter = (filters: CarsFilters) => {
+    setFilters(filters);
+  };
+
   useEffect(() => {
-    fetchCars(1);
+    setFilters({});
     fetchBrands();
-  }, [fetchCars, fetchBrands]);
+  }, [fetchBrands, setFilters]);
 
   return (
     <div className="container">
-      <CarFilters brands={brands} onFilter={setFilters} />
+      <CarFilters brands={brands} onFilter={handleFilter} />
 
       {error && <div className="error">{error}</div>}
 

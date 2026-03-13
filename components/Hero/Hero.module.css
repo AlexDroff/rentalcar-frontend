@@ -1,8 +1,9 @@
 .hero {
-  width: 100vw;
+  width: 100%; /* fill container only */
   height: 700px;
-  margin-left: calc(50% - 50vw);
-  margin-right: calc(50% - 50vw);
+  /* remove full-bleed margins */
+  /* margin-left: calc(50% - 50vw); */
+  /* margin-right: calc(50% - 50vw); */
   background-image: url('/images/hero-bg.jpg');
   background-size: cover;
   background-position: center;
