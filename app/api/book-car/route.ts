@@ -24,6 +24,11 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    return NextResponse.json({ error: 'Email failed' }, { status: 500 });
+    console.error('Email sending failed:', error);
+
+    return NextResponse.json(
+      { error: 'Failed to send booking email' },
+      { status: 500 }
+    );
   }
 }

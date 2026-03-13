@@ -4,65 +4,48 @@
   gap: 72px;
   align-items: stretch;
 }
-
-/* LEFT */
-
 .left {
   display: flex;
   flex-direction: column;
   gap: 40px;
 }
-
-/* IMAGE */
-
 .image {
   width: 640px;
   height: 512px;
   border-radius: 19px;
   object-fit: cover;
 }
-
-/* RIGHT */
-
 .right {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
-
-/* -------- TITLE BLOCK -------- */
-
 .titleBlock {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-bottom: 68px;
 }
-
 .titleRow {
   display: flex;
   align-items: center;
   gap: 16px;
 }
-
 .title {
   font-weight: 600;
   font-size: 24px;
   line-height: 1.333;
   color: var(--main);
 }
-
 .model {
   color: var(--button);
 }
-
 .id {
   font-weight: 500;
   font-size: 16px;
   line-height: 1.25;
   color: var(--gray);
 }
-
 .meta {
   display: flex;
   gap: 16px;
@@ -72,7 +55,6 @@
   line-height: 1.25;
   color: var(--main);
 }
-
 .price {
   font-weight: 600;
   font-size: 24px;
@@ -82,40 +64,29 @@
   margin-top: 8px;
   margin-bottom: 32px;
 }
-
 .description {
   font-weight: 500;
   font-size: 16px;
   line-height: 1.25;
   color: var(--main);
 }
-
-/* -------- SPECS BLOCK -------- */
-
 .specsBlock {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
 }
-
-/* SECTION */
-
 .section {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
-
 .sectionTitle {
   font-weight: 600;
   font-size: 20px;
   line-height: 1.2;
   color: var(--main);
 }
-
-/* LIST */
-
 .list {
   display: flex;
   flex-direction: column;
@@ -124,7 +95,6 @@
   padding: 0;
   margin: 0;
 }
-
 .list li {
   display: flex;
   align-items: center;
@@ -135,39 +105,31 @@
   line-height: 1.25;
   color: var(--main);
 }
-
-/* ICONS */
-
 .specItem {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-
 .specIcon {
   width: 20px;
   height: 20px;
   fill: var(--main);
 }
-
 .location {
   display: flex;
   align-items: center;
   gap: 6px;
 }
-
 .locationIcon {
   width: 16px;
   height: 16px;
   fill: var(--main);
 }
-
 .checkItem {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-
 .checkIcon {
   width: 16px;
   height: 16px;

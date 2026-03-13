@@ -67,6 +67,7 @@ export const RentForm = ({ carId }: RentFormProps) => {
       });
       setSuccessMessage('Booking request sent successfully');
     } catch (error) {
+      console.error('Booking request failed:', error);
       setErrorMessage('Failed to send booking request. Please try again.');
     }
   };
@@ -80,9 +81,7 @@ export const RentForm = ({ carId }: RentFormProps) => {
         </p>
       </div>
 
-      {successMessage && (
-        <p className={styles.success}>{successMessage}</p>
-      )}
+      {successMessage && <p className={styles.success}>{successMessage}</p>}
 
       {errorMessage && <p className={styles.error}>{errorMessage}</p>}
 

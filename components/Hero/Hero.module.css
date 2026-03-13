@@ -1,9 +1,6 @@
 .hero {
-  width: 100%; /* fill container only */
+  width: 100%;
   height: 700px;
-  /* remove full-bleed margins */
-  /* margin-left: calc(50% - 50vw); */
-  /* margin-right: calc(50% - 50vw); */
   background-image: url('/images/hero-bg.jpg');
   background-size: cover;
   background-position: center;
@@ -25,7 +22,6 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-
   margin-bottom: 60px;
 }
 
@@ -35,7 +31,6 @@
   font-size: 60px;
   line-height: 1.2;
   color: var(--white);
-
   margin-bottom: 16px;
 }
 
@@ -45,6 +40,5 @@
   font-size: 24px;
   line-height: 1.33333;
   color: var(--white);
-
   margin-bottom: 40px;
 }

@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   description: 'Find and rent premium cars online',
   keywords: ['car rental', 'rent car', 'vehicles'],
   authors: [{ name: 'RentalCar Team' }],
-  metadataBase: new URL('https://rentalcar.app'),
+  metadataBase: new URL('https://rentalcar-frontend-six.vercel.app/'),
 };
 
 export default function RootLayout({
