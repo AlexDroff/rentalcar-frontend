@@ -9,19 +9,17 @@ export const Hero: React.FC = () => {
   return (
     <section className={styles.hero}>
       <div className={styles.overlay}>
-        <div className="container">
-          <div className={styles.content}>
-            <h1 className={styles.title}>Find Your Perfect Rental Car</h1>
+        <div className={styles.content}>
+          <h1 className={styles.title}>Find Your Perfect Rental Car</h1>
 
-            <p className={styles.subtitle}>
-              Browse our wide selection of premium vehicles and book your ideal
-              car today
-            </p>
+          <p className={styles.subtitle}>
+            Browse our wide selection of premium vehicles and book your ideal
+            car today
+          </p>
 
-            <Link href={ROUTES.CATALOG}>
-              <Button variant="primary">View Catalog</Button>
-            </Link>
-          </div>
+          <Link href={ROUTES.CATALOG}>
+            <Button variant="primary">View Catalog</Button>
+          </Link>
         </div>
       </div>
     </section>
