@@ -23,6 +23,8 @@ export const RentForm = ({ carId }: RentFormProps) => {
     bookingDate: '',
     comment: '',
   });
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -37,6 +39,9 @@ export const RentForm = ({ carId }: RentFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    setSuccessMessage(null);
+    setErrorMessage(null);
 
     try {
       const res = await fetch('/api/book-car', {
@@ -54,16 +59,15 @@ export const RentForm = ({ carId }: RentFormProps) => {
         throw new Error('Failed to send booking');
       }
 
-      console.log('Booking request sent');
-
       setFormData({
         name: '',
         email: '',
         bookingDate: '',
         comment: '',
       });
+      setSuccessMessage('Booking request sent successfully');
     } catch (error) {
-      console.error('Booking error:', error);
+      setErrorMessage('Failed to send booking request. Please try again.');
     }
   };
 
@@ -75,6 +79,12 @@ export const RentForm = ({ carId }: RentFormProps) => {
           Stay connected! We are always ready to help you.
         </p>
       </div>
+
+      {successMessage && (
+        <p className={styles.success}>{successMessage}</p>
+      )}
+
+      {errorMessage && <p className={styles.error}>{errorMessage}</p>}
 
       <Input
         type="text"

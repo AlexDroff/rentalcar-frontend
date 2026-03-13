@@ -15,6 +15,7 @@ export default function CatalogPageClient() {
   const brands = useCarsStore((state) => state.brands);
 
   const fetchBrands = useCarsStore((state) => state.fetchBrands);
+  const loadFavorites = useCarsStore((state) => state.loadFavorites);
 
   const loadMoreCars = useCarsStore((state) => state.loadMoreCars);
   const setFilters = useCarsStore((state) => state.setFilters);
@@ -27,7 +28,8 @@ export default function CatalogPageClient() {
   useEffect(() => {
     setFilters({});
     fetchBrands();
-  }, [fetchBrands, setFilters]);
+    loadFavorites();
+  }, [fetchBrands, loadFavorites, setFilters]);
 
   return (
     <div className="container">
