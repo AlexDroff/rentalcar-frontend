@@ -1,8 +1,6 @@
 .hero {
   width: 100%;
-  max-width: 1440px;
-  height: 700px;
-  margin: 0 auto;
+  height: calc(100vh - 68px);
   background-image: url('/images/hero-bg.jpg');
   background-size: cover;
   background-position: center;
@@ -10,12 +8,13 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  margin-top: -80px;
 }
 
 .overlay {
   width: 100%;
+  height: 100%;
   display: flex;
+  align-items: flex-end;
   justify-content: center;
 }
 
@@ -24,11 +23,10 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  margin-bottom: 60px;
+  margin-bottom: 120px; /* ось це рухає текст */
 }
 
 .title {
-  font-family: var(--font-family);
   font-weight: 700;
   font-size: 60px;
   line-height: 1.2;
@@ -37,7 +35,6 @@
 }
 
 .subtitle {
-  font-family: var(--font-family);
   font-weight: 600;
   font-size: 24px;
   line-height: 1.33333;

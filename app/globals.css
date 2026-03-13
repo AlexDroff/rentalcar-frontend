@@ -42,9 +42,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-main {
+/* main {
   padding-top: 84px;
-}
+} */
 
 /* links */
 a {
@@ -139,4 +139,5 @@ ol {
 
 .catalogPage {
   padding-bottom: 124px;
+  padding-top: 84px;
 }
