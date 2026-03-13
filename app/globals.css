@@ -136,3 +136,7 @@ ol {
   font-weight: 700;
   color: var(--main);
 }
+
+.catalogPage {
+  padding-bottom: 124px;
+}

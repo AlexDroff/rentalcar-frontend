@@ -32,7 +32,7 @@ export default function CatalogPageClient() {
   }, [fetchBrands, loadFavorites, setFilters]);
 
   return (
-    <div className="container">
+    <div className="container catalogPage">
       <CarFilters brands={brands} onFilter={handleFilter} />
 
       {error && <div className="error">{error}</div>}
