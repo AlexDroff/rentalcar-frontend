@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { Input } from '@/components/ui/Input/Input';
 import { Button } from '@/components/ui/Button/Button';
 import styles from './RentForm.module.css';
@@ -23,6 +24,7 @@ export const RentForm = ({ carId }: RentFormProps) => {
     bookingDate: '',
     comment: '',
   });
+
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -39,9 +41,6 @@ export const RentForm = ({ carId }: RentFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    setSuccessMessage(null);
-    setErrorMessage(null);
 
     try {
       const res = await fetch('/api/book-car', {
@@ -65,10 +64,11 @@ export const RentForm = ({ carId }: RentFormProps) => {
         bookingDate: '',
         comment: '',
       });
-      setSuccessMessage('Booking request sent successfully');
+
+      toast.success('Car booked successfully!');
     } catch (error) {
       console.error('Booking request failed:', error);
-      setErrorMessage('Failed to send booking request. Please try again.');
+      toast.error('Failed to send booking request');
     }
   };
 
@@ -82,7 +82,6 @@ export const RentForm = ({ carId }: RentFormProps) => {
       </div>
 
       {successMessage && <p className={styles.success}>{successMessage}</p>}
-
       {errorMessage && <p className={styles.error}>{errorMessage}</p>}
 
       <Input

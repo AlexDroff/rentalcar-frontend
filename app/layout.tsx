@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Manrope } from 'next/font/google';
 import { Header } from '@/components/Header/Header';
 import './globals.css';
+import { Toaster } from 'react-hot-toast';
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -30,6 +31,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${manrope.variable} ${manrope.className}`}>
         <Header />
+        <Toaster position="top-right" />
         <main>{children}</main>
       </body>
     </html>
