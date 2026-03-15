@@ -5,7 +5,15 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req: Request) {
   const body = await req.json();
-  const { name, email, bookingDate, comment, carId } = body;
+  const {
+    name,
+    email,
+    bookingDate,
+    bookingStartDate,
+    bookingEndDate,
+    comment,
+    carId,
+  } = body;
 
   if (!name || !email || !carId) {
     return NextResponse.json(
@@ -24,7 +32,9 @@ export async function POST(req: Request) {
         <p><b>Car ID:</b> ${carId}</p>
         <p><b>Name:</b> ${name}</p>
         <p><b>Email:</b> ${email}</p>
-        <p><b>Date:</b> ${bookingDate || 'Not specified'}</p>
+        <p><b>Rental period:</b> ${bookingDate || 'Not specified'}</p>
+        <p><b>Start date:</b> ${bookingStartDate || 'Not specified'}</p>
+        <p><b>End date:</b> ${bookingEndDate || 'Not specified'}</p>
         <p><b>Comment:</b> ${comment}</p>
       `,
     });

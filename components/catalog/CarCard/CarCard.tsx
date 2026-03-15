@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ROUTES } from '@/constants/routes';
-import { useCarsStore } from '@/lib/store/cars.store';
+import { useFavoritesStore } from '@/lib/store/favorites.store';
 import { formatMileage, parseAddress } from '@/utils/format';
 import { getSafeImage } from '@/utils/image';
 import type { Car } from '@/types/car';
@@ -15,8 +15,8 @@ interface CarCardProps {
 }
 
 export const CarCard: React.FC<CarCardProps> = ({ car }) => {
-  const toggleFavorite = useCarsStore((state) => state.toggleFavorite);
-  const favorite = useCarsStore((state) => state.favorites.includes(car.id));
+  const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
+  const favorite = useFavoritesStore((state) => state.isFavorite(car.id));
 
   const { city, country } = parseAddress(car.address);
   const mileage = formatMileage(car.mileage);

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button } from '@/components/ui/Button/Button';
 import type { CarsFilters } from '@/types/car';
 import styles from './CarFilters.module.css';
@@ -18,26 +18,31 @@ const formatNumber = (value: string) => {
 
 export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
   const [filters, setFilters] = useState<CarsFilters>({});
-  const [isBrandOpen, setIsBrandOpen] = useState(false);
-  const [isPriceOpen, setIsPriceOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<'brand' | 'price' | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const priceOptions = useMemo(() => [30, 40, 50, 60, 70, 80], []);
 
-  const handleBrandChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value || undefined;
+  useEffect(() => {
+    const handlePointerDown = (event: MouseEvent) => {
+      if (formRef.current && !formRef.current.contains(event.target as Node)) {
+        setOpenDropdown(null);
+      }
+    };
 
-    setFilters((prev) => ({
-      ...prev,
-      brand: value,
-    }));
-  };
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setOpenDropdown(null);
+      }
+    };
 
-  const handlePriceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value || undefined;
+    document.addEventListener('mousedown', handlePointerDown);
+    document.addEventListener('keydown', handleEscape);
 
-    setFilters((prev) => ({
-      ...prev,
-      rentalPrice: value,
-    }));
-  };
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+      document.removeEventListener('keydown', handleEscape);
+    };
+  }, []);
 
   const handleMinMileageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value.replace(/,/g, '');
@@ -59,99 +64,150 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
     }));
   };
 
-  const handleSearch = () => {
-    onFilter(filters);
+  const handleBrandSelect = (value?: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      brand: value,
+    }));
+    setOpenDropdown(null);
+  };
+
+  const handlePriceSelect = (value?: string) => {
+    setFilters((prev) => ({
+      ...prev,
+      rentalPrice: value,
+    }));
+    setOpenDropdown(null);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleSearch();
+    onFilter(filters);
   };
 
   return (
     <section className={styles.filters} aria-label="Catalog filters">
-      <form className={styles.form} onSubmit={handleSubmit}>
-        {/* BRAND */}
+      <form className={styles.form} onSubmit={handleSubmit} ref={formRef}>
         <div className={styles.group}>
-          <label htmlFor="brand-select" className={styles.label}>
+          <label htmlFor="brand-trigger" className={styles.label}>
             Car brand
           </label>
 
-          <div className={styles.selectWrapper}>
-            <select
-              id="brand-select"
-              value={filters.brand || ''}
-              onChange={handleBrandChange}
-              onClick={() => setIsBrandOpen((prev) => !prev)}
-              onBlur={() => setIsBrandOpen(false)}
-              className={styles.select}
+          <div className={styles.dropdown}>
+            <button
+              id="brand-trigger"
+              type="button"
+              className={styles.trigger}
+              onClick={() =>
+                setOpenDropdown((prev) => (prev === 'brand' ? null : 'brand'))
+              }
+              aria-haspopup="listbox"
+              aria-controls="brand-options"
             >
-              <option value="">Choose a brand</option>
+              <span
+                className={filters.brand ? styles.triggerValue : styles.placeholder}
+              >
+                {filters.brand || 'Choose a brand'}
+              </span>
 
-              {brands.map((brand) => (
-                <option key={brand} value={brand}>
-                  {brand}
-                </option>
-              ))}
-            </select>
+              <svg className={styles.selectIcon} aria-hidden="true" focusable="false">
+                <use
+                  href={`/images/sprite.svg#${
+                    openDropdown === 'brand' ? 'icon-arrow_up' : 'icon-arrow_down'
+                  }`}
+                />
+              </svg>
+            </button>
 
-            <svg
-              className={styles.selectIcon}
-              aria-hidden="true"
-              focusable="false"
-            >
-              <use
-                href={`/images/sprite.svg#${
-                  isBrandOpen ? 'icon-arrow_up' : 'icon-arrow_down'
-                }`}
-              />
-            </svg>
+            {openDropdown === 'brand' && (
+              <ul
+                id="brand-options"
+                className={styles.options}
+                role="listbox"
+                aria-label="Car brand options"
+              >
+                {brands.map((brand) => (
+                  <li key={brand}>
+                    <button
+                      type="button"
+                      className={`${styles.option} ${
+                        filters.brand === brand ? styles.optionActive : ''
+                      }`}
+                      onClick={() => handleBrandSelect(brand)}
+                    >
+                      {brand}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
 
-        {/* PRICE */}
         <div className={styles.group}>
-          <label htmlFor="price-select" className={styles.label}>
+          <label htmlFor="price-trigger" className={styles.label}>
             Price / 1 hour
           </label>
 
-          <div className={styles.selectWrapper}>
-            <select
-              id="price-select"
-              value={filters.rentalPrice || ''}
-              onChange={handlePriceChange}
-              onClick={() => setIsPriceOpen((prev) => !prev)}
-              onBlur={() => setIsPriceOpen(false)}
-              className={styles.select}
+          <div className={styles.dropdown}>
+            <button
+              id="price-trigger"
+              type="button"
+              className={styles.trigger}
+              onClick={() =>
+                setOpenDropdown((prev) => (prev === 'price' ? null : 'price'))
+              }
+              aria-haspopup="listbox"
+              aria-controls="price-options"
             >
-              <option value="">Choose a price</option>
+              <span
+                className={
+                  filters.rentalPrice ? styles.triggerValue : styles.placeholder
+                }
+              >
+                {filters.rentalPrice
+                  ? `To $${filters.rentalPrice}`
+                  : 'Choose a price'}
+              </span>
 
-              {[30, 40, 50, 60, 70, 80].map((price) => {
-                const priceStr = String(price);
+              <svg className={styles.selectIcon} aria-hidden="true" focusable="false">
+                <use
+                  href={`/images/sprite.svg#${
+                    openDropdown === 'price' ? 'icon-arrow_up' : 'icon-arrow_down'
+                  }`}
+                />
+              </svg>
+            </button>
 
-                return (
-                  <option key={price} value={priceStr}>
-                    {filters.rentalPrice === priceStr ? `To $${price}` : price}
-                  </option>
-                );
-              })}
-            </select>
+            {openDropdown === 'price' && (
+              <ul
+                id="price-options"
+                className={styles.options}
+                role="listbox"
+                aria-label="Price options"
+              >
+                {priceOptions.map((price) => {
+                  const priceStr = String(price);
 
-            <svg
-              className={styles.selectIcon}
-              aria-hidden="true"
-              focusable="false"
-            >
-              <use
-                href={`/images/sprite.svg#${
-                  isPriceOpen ? 'icon-arrow_up' : 'icon-arrow_down'
-                }`}
-              />
-            </svg>
+                  return (
+                    <li key={price}>
+                    <button
+                      type="button"
+                      className={`${styles.option} ${
+                          filters.rentalPrice === priceStr ? styles.optionActive : ''
+                      }`}
+                      onClick={() => handlePriceSelect(priceStr)}
+                    >
+                        {price}
+                    </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </div>
         </div>
 
-        {/* MILEAGE */}
         <div className={styles.group}>
           <span className={styles.label}>Car mileage / km</span>
 
@@ -159,30 +215,35 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
             <label htmlFor="min-mileage" className={styles.visuallyHidden}>
               Minimum mileage
             </label>
-            <input
-              id="min-mileage"
-              type="text"
-              placeholder="From"
-              value={filters.minMileage ? formatNumber(filters.minMileage) : ''}
-              onChange={handleMinMileageChange}
-              className={styles.mileageInput}
-            />
+            <div className={styles.mileageField}>
+              <span className={styles.mileagePrefix}>From</span>
+              <input
+                id="min-mileage"
+                type="text"
+                inputMode="numeric"
+                value={filters.minMileage ? formatNumber(filters.minMileage) : ''}
+                onChange={handleMinMileageChange}
+                className={styles.mileageInput}
+              />
+            </div>
 
             <label htmlFor="max-mileage" className={styles.visuallyHidden}>
               Maximum mileage
             </label>
-            <input
-              id="max-mileage"
-              type="text"
-              placeholder="To"
-              value={filters.maxMileage ? formatNumber(filters.maxMileage) : ''}
-              onChange={handleMaxMileageChange}
-              className={styles.mileageInput}
-            />
+            <div className={styles.mileageField}>
+              <span className={styles.mileagePrefix}>To</span>
+              <input
+                id="max-mileage"
+                type="text"
+                inputMode="numeric"
+                value={filters.maxMileage ? formatNumber(filters.maxMileage) : ''}
+                onChange={handleMaxMileageChange}
+                className={styles.mileageInput}
+              />
+            </div>
           </div>
         </div>
 
-        {/* BUTTON */}
         <div className={styles.actions}>
           <Button type="submit" variant="primary" size="small">
             Search

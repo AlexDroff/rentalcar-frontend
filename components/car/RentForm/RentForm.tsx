@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+import { DayPicker, DateRange } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
 import { Input } from '@/components/ui/Input/Input';
 import { Button } from '@/components/ui/Button/Button';
 import styles from './RentForm.module.css';
@@ -9,22 +11,46 @@ import styles from './RentForm.module.css';
 interface RentFormData {
   name: string;
   email: string;
-  bookingDate: string;
   comment: string;
 }
 
 interface FormErrors {
   name?: string;
   email?: string;
-  bookingDate?: string;
+  bookingRange?: string;
 }
 
 type FormField = keyof RentFormData;
 
-const getLocalDateString = () => {
-  const now = new Date();
-  const timezoneOffset = now.getTimezoneOffset() * 60000;
-  return new Date(now.getTime() - timezoneOffset).toISOString().split('T')[0];
+const formatDate = (date?: Date) => {
+  if (!date) {
+    return '';
+  }
+
+  const timezoneOffset = date.getTimezoneOffset() * 60000;
+  return new Date(date.getTime() - timezoneOffset).toISOString().split('T')[0];
+};
+
+const formatRangeLabel = (range?: DateRange) => {
+  if (!range?.from && !range?.to) {
+    return 'Booking period';
+  }
+
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+  });
+
+  if (range.from && !range.to) {
+    return `${formatter.format(range.from)} - Select end date`;
+  }
+
+  if (range.from && range.to) {
+    return `${formatter.format(range.from)} - ${formatter.format(range.to)}`;
+  }
+
+  return 'Booking period';
 };
 
 interface RentFormProps {
@@ -35,13 +61,43 @@ export const RentForm = ({ carId }: RentFormProps) => {
   const [formData, setFormData] = useState<RentFormData>({
     name: '',
     email: '',
-    bookingDate: '',
     comment: '',
   });
+  const [range, setRange] = useState<DateRange | undefined>();
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const calendarRef = useRef<HTMLDivElement>(null);
+  const calendarTriggerRef = useRef<HTMLButtonElement>(null);
+  const calendarDialogRef = useRef<HTMLDivElement>(null);
 
-  const today = getLocalDateString();
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  useEffect(() => {
+    const handlePointerDown = (event: MouseEvent) => {
+      if (
+        calendarRef.current &&
+        !calendarRef.current.contains(event.target as Node)
+      ) {
+        setIsCalendarOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handlePointerDown);
+
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isCalendarOpen) {
+      return;
+    }
+
+    calendarDialogRef.current?.focus();
+  }, [isCalendarOpen]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -57,13 +113,23 @@ export const RentForm = ({ carId }: RentFormProps) => {
     setErrors((prev) => ({
       ...prev,
       [fieldName]:
-        fieldName === 'name' ||
-        fieldName === 'email' ||
-        fieldName === 'bookingDate'
+        fieldName === 'name' || fieldName === 'email'
           ? undefined
           : prev[fieldName as keyof FormErrors],
     }));
+  };
 
+  const handleRangeSelect = (selectedRange: DateRange | undefined) => {
+    setRange(selectedRange);
+    setErrors((prev) => ({
+      ...prev,
+      bookingRange: undefined,
+    }));
+
+    if (selectedRange?.from && selectedRange?.to) {
+      setIsCalendarOpen(false);
+      calendarTriggerRef.current?.focus();
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -81,8 +147,22 @@ export const RentForm = ({ carId }: RentFormProps) => {
       newErrors.email = 'Enter a valid email address';
     }
 
-    if (formData.bookingDate && formData.bookingDate < today) {
-      newErrors.bookingDate = 'Booking date cannot be in the past';
+    if (range?.from || range?.to) {
+      if (!range?.from || !range?.to) {
+        newErrors.bookingRange = 'Select both start and end date';
+      } else {
+        const startDate = new Date(range.from);
+        const endDate = new Date(range.to);
+
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(0, 0, 0, 0);
+
+        if (startDate < today) {
+          newErrors.bookingRange = 'Start date cannot be in the past';
+        } else if (endDate < startDate) {
+          newErrors.bookingRange = 'End date must be later than start date';
+        }
+      }
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -102,6 +182,12 @@ export const RentForm = ({ carId }: RentFormProps) => {
         body: JSON.stringify({
           carId,
           ...formData,
+          bookingStartDate: formatDate(range?.from),
+          bookingEndDate: formatDate(range?.to),
+          bookingDate:
+            range?.from && range?.to
+              ? `${formatDate(range.from)} - ${formatDate(range.to)}`
+              : '',
         }),
       });
 
@@ -116,9 +202,10 @@ export const RentForm = ({ carId }: RentFormProps) => {
       setFormData({
         name: '',
         email: '',
-        bookingDate: '',
         comment: '',
       });
+      setRange(undefined);
+      setIsCalendarOpen(false);
 
       toast.success('Your booking request has been sent.');
     } catch (error) {
@@ -147,6 +234,8 @@ export const RentForm = ({ carId }: RentFormProps) => {
         type="text"
         id="booking-name"
         name="name"
+        label="Name"
+        hideLabel
         placeholder="Name*"
         value={formData.name}
         onChange={handleChange}
@@ -159,6 +248,8 @@ export const RentForm = ({ carId }: RentFormProps) => {
         type="email"
         id="booking-email"
         name="email"
+        label="Email"
+        hideLabel
         placeholder="Email*"
         value={formData.email}
         onChange={handleChange}
@@ -167,43 +258,82 @@ export const RentForm = ({ carId }: RentFormProps) => {
         disabled={isSubmitting}
       />
 
-      <div className={styles.dateWrapper}>
-        {!formData.bookingDate && (
-          <span className={styles.datePlaceholder}>Booking date</span>
-        )}
+      <div className={styles.calendarSection}>
+        <div className={styles.calendarField} ref={calendarRef}>
+          <button
+            ref={calendarTriggerRef}
+            type="button"
+            className={`${styles.calendarTrigger} ${
+              errors.bookingRange ? styles.calendarTriggerError : ''
+            }`}
+            onClick={() => setIsCalendarOpen((prev) => !prev)}
+            aria-haspopup="dialog"
+            aria-controls="booking-period-calendar"
+            aria-describedby={errors.bookingRange ? 'booking-range-error' : undefined}
+            aria-label={
+              range?.from || range?.to
+                ? `Booking date, selected period ${formatRangeLabel(range)}`
+                : 'Booking date'
+            }
+            {...(errors.bookingRange ? { 'aria-invalid': 'true' } : {})}
+            disabled={isSubmitting}
+          >
+            <span
+              className={`${styles.calendarValue} ${
+                !range?.from && !range?.to ? styles.calendarPlaceholder : ''
+              }`}
+            >
+              {range?.from || range?.to ? formatRangeLabel(range) : 'Booking date'}
+            </span>
+          </button>
 
-        <label htmlFor="bookingDate" className={styles.visuallyHidden}>
-          Booking date
-        </label>
+          {isCalendarOpen && (
+            <div
+              id="booking-period-calendar"
+              ref={calendarDialogRef}
+              role="dialog"
+              aria-modal="false"
+              aria-label="Booking date range picker"
+              tabIndex={-1}
+              className={`${styles.calendarWrapper} ${
+                errors.bookingRange ? styles.calendarWrapperError : ''
+              }`}
+              onKeyDown={(event) => {
+                if (event.key === 'Escape') {
+                  setIsCalendarOpen(false);
+                  calendarTriggerRef.current?.focus();
+                }
+              }}
+            >
+              <DayPicker
+                mode="range"
+                selected={range}
+                onSelect={handleRangeSelect}
+                numberOfMonths={2}
+                disabled={{ before: today }}
+              />
+            </div>
+          )}
+        </div>
 
-        <input
-          id="bookingDate"
-          type="date"
-          name="bookingDate"
-          value={formData.bookingDate}
-          onChange={handleChange}
-          className={`${styles.dateInput} ${
-            formData.bookingDate ? styles.dateInputFilled : ''
-          } ${errors.bookingDate ? styles.dateInputError : ''}`}
-          aria-describedby={errors.bookingDate ? 'bookingDate-error' : undefined}
-          min={today}
-          disabled={isSubmitting}
-          {...(errors.bookingDate ? { 'aria-invalid': 'true' } : {})}
-        />
-
-        {errors.bookingDate && (
+        {errors.bookingRange && (
           <span
-            id="bookingDate-error"
+            id="booking-range-error"
             className={styles.errorMessage}
             role="alert"
             aria-live="polite"
           >
-            {errors.bookingDate}
+            {errors.bookingRange}
           </span>
         )}
       </div>
 
+      <label htmlFor="booking-comment" className={styles.visuallyHidden}>
+        Comment
+      </label>
+
       <textarea
+        id="booking-comment"
         name="comment"
         placeholder="Comment"
         value={formData.comment}

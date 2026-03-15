@@ -9,7 +9,7 @@
   padding: 32px;
 
   width: 100%;
-  min-height: 488px;
+  min-height: 484px;
 
   background: var(--white);
 }
@@ -35,7 +35,7 @@
 
 .textarea {
   width: 100%;
-  height: 88px;
+  height: 84px;
   padding: 12px 20px;
   border-radius: 12px;
   border: none;
@@ -50,7 +50,7 @@
 }
 
 .textarea:disabled,
-.dateInput:disabled {
+.calendarWrapper :global(.rdp-button):disabled {
   cursor: not-allowed;
   opacity: 0.72;
 }
@@ -71,55 +71,116 @@
   border: 0;
 }
 
-.dateWrapper {
-  position: relative;
-  width: 100%;
+.calendarSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
-.dateInput {
+.calendarField {
+  position: relative;
+}
+
+.calendarTrigger {
+  display: flex;
+  align-items: center;
   width: 100%;
   height: 48px;
   padding: 12px 20px;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 12px;
   background: var(--inputs);
   font-family: var(--font-family);
   font-size: 16px;
-  color: transparent;
+  line-height: 1.25;
+  text-align: left;
+  cursor: pointer;
 }
 
-.dateInputFilled {
+.calendarTriggerError {
+  border-color: #d84343;
+  box-shadow: 0 0 0 3px rgba(216, 67, 67, 0.12);
+}
+
+.calendarValue {
   color: var(--main);
 }
 
-.dateInputError {
-  border: 1px solid #d84343;
-}
-
-.dateInput::-webkit-datetime-edit {
-  color: transparent;
-}
-
-.dateInputFilled::-webkit-datetime-edit {
-  color: var(--main);
-}
-
-.datePlaceholder {
-  position: absolute;
-  left: 20px;
-  top: 50%;
-  transform: translateY(-50%);
+.calendarPlaceholder {
   color: var(--gray);
-  pointer-events: none;
-  font-size: 16px;
 }
 
-.dateInput:invalid {
-  color: transparent;
+.calendarWrapper {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 10;
+  overflow-x: auto;
+  border: 1px solid var(--badges);
+  border-radius: 12px;
+  padding: 12px;
+  background: var(--white);
+  box-shadow: 0 18px 48px rgba(18, 20, 23, 0.12);
 }
 
-.dateInput:valid {
-  color: var(--main);
+.calendarWrapperError {
+  border-color: #d84343;
+  box-shadow: 0 0 0 3px rgba(216, 67, 67, 0.12);
+}
+
+.calendarWrapper :global(.rdp-root) {
+  --rdp-accent-color: var(--button);
+  --rdp-range_middle-background-color: rgba(52, 112, 255, 0.12);
+  --rdp-range_middle-color: var(--main);
+  --rdp-day-width: 32px;
+  --rdp-day-height: 32px;
+  --rdp-day_button-width: 32px;
+  --rdp-day_button-height: 32px;
+  --rdp-nav_button-width: 24px;
+  --rdp-nav_button-height: 24px;
+  --rdp-months-gap: 10px;
+  margin: 0;
+  padding: 8px;
+  border: 1px solid var(--button);
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.calendarWrapper :global(.rdp-months) {
+  justify-content: center;
+}
+
+.calendarWrapper :global(.rdp-month_caption) {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.calendarWrapper :global(.rdp-day_button) {
+  font-family: var(--font-family);
+  border-radius: 999px;
+  font-size: 12px;
+}
+
+.calendarWrapper :global(.rdp-caption_label),
+.calendarWrapper :global(.rdp-weekday) {
+  font-family: var(--font-family);
+}
+
+.calendarWrapper :global(.rdp-weekday) {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--gray);
+}
+
+.calendarWrapper :global(.rdp-nav_button) {
+  border: none;
+}
+
+.calendarWrapper :global(.rdp-range_start .rdp-day_button),
+.calendarWrapper :global(.rdp-range_end .rdp-day_button),
+.calendarWrapper :global(.rdp-selected .rdp-day_button) {
+  background: var(--button);
+  color: var(--white);
 }
 
 .errorMessage {
@@ -135,6 +196,23 @@
     padding: 24px 20px;
     min-height: 0;
     gap: 20px;
+  }
+
+  .calendarWrapper {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .calendarWrapper :global(.rdp-root) {
+    --rdp-day-width: 30px;
+    --rdp-day-height: 30px;
+    --rdp-day_button-width: 30px;
+    --rdp-day_button-height: 30px;
+    font-size: 13px;
+  }
+
+  .calendarWrapper :global(.rdp-months) {
+    flex-direction: column;
   }
 
   .buttonWrapper :global(button) {

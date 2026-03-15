@@ -4,9 +4,17 @@ import styles from './Input.module.css';
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
+  hideLabel?: boolean;
 }
 
-export const Input = ({ label, error, className, id, ...props }: InputProps) => {
+export const Input = ({
+  label,
+  error,
+  className,
+  id,
+  hideLabel = false,
+  ...props
+}: InputProps) => {
   const classes = [styles.input, error ? styles.error : '', className ?? '']
     .filter(Boolean)
     .join(' ');
@@ -16,7 +24,10 @@ export const Input = ({ label, error, className, id, ...props }: InputProps) => 
   return (
     <div className={styles.wrapper}>
       {label && (
-        <label className={styles.label} htmlFor={id}>
+        <label
+          className={hideLabel ? styles.visuallyHidden : styles.label}
+          htmlFor={id}
+        >
           {label}
         </label>
       )}

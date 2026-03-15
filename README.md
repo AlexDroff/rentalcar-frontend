@@ -2,6 +2,10 @@
 
 Frontend for a car rental application. Browse a catalog of cars, filter by various criteria, view detailed information, save favorites, and send a booking request for a selected car.
 
+### Live Demo
+
+- **Production**: https://rentalcar-frontend-six.vercel.app/
+
 ### Main Features
 
 - **Home page** with a hero section and a direct link to the catalog.
@@ -78,7 +82,9 @@ Open `http://localhost:3000` in your browser.
 - Favorites persist after reload via Zustand `persist`.
 - Catalog filtering and pagination are performed on the backend API.
 - Booking requests are sent through the local Next.js API route using Resend.
+- The project is deployed on **Vercel**.
 
 ### Author
 
+- **Name**: Oleksandr Droff
 - **GitHub**: [AlexDroff](https://github.com/AlexDroff)
