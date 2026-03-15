@@ -133,7 +133,7 @@
 @media (max-width: 767px) {
   .form {
     padding: 24px 20px;
-    min-height: auto;
+    min-height: 0;
     gap: 20px;
   }
 
