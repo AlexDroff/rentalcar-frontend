@@ -7,6 +7,13 @@ export async function POST(req: Request) {
   const body = await req.json();
   const { name, email, bookingDate, comment, carId } = body;
 
+  if (!name || !email || !carId) {
+    return NextResponse.json(
+      { error: 'Missing required booking fields' },
+      { status: 400 }
+    );
+  }
+
   try {
     await resend.emails.send({
       from: 'RentalCar <onboarding@resend.dev>',
@@ -17,7 +24,7 @@ export async function POST(req: Request) {
         <p><b>Car ID:</b> ${carId}</p>
         <p><b>Name:</b> ${name}</p>
         <p><b>Email:</b> ${email}</p>
-        <p><b>Date:</b> ${bookingDate}</p>
+        <p><b>Date:</b> ${bookingDate || 'Not specified'}</p>
         <p><b>Comment:</b> ${comment}</p>
       `,
     });

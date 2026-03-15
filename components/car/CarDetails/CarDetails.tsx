@@ -15,7 +15,7 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car }) => {
   const imageSrc = getSafeImage(car.img);
 
   return (
-    <div className={styles.details}>
+    <article className={styles.details}>
       <div className={styles.left}>
         <Image
           src={imageSrc}
@@ -29,7 +29,7 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car }) => {
       </div>
 
       <div className={styles.right}>
-        <div className={styles.titleBlock}>
+        <header className={styles.titleBlock}>
           <div className={styles.titleRow}>
             <h1 className={styles.title}>
               {car.brand} <span className={styles.model}>{car.model}</span>,{' '}
@@ -43,7 +43,11 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car }) => {
 
           <div className={styles.meta}>
             <span className={styles.location}>
-              <svg className={styles.locationIcon}>
+              <svg
+                className={styles.locationIcon}
+                aria-hidden="true"
+                focusable="false"
+              >
                 <use href="/images/sprite.svg#icon-Location" />
               </svg>
               {city}, {country}
@@ -52,73 +56,104 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car }) => {
             <span>Mileage: {mileage} km</span>
           </div>
 
-          <div className={styles.price}>${car.rentalPrice}</div>
+          <p className={styles.price}>${car.rentalPrice}</p>
 
           <p className={styles.description}>{car.description}</p>
-        </div>
+        </header>
 
         <div className={styles.specsBlock}>
           {car.rentalConditions?.length > 0 && (
-            <div className={styles.section}>
-              <h3 className={styles.sectionTitle}>Rental Conditions:</h3>
+            <section className={styles.section} aria-labelledby="rental-conditions-title">
+              <h2 id="rental-conditions-title" className={styles.sectionTitle}>
+                Rental Conditions:
+              </h2>
 
               <ul className={styles.list}>
                 {car.rentalConditions.map((item, index) => (
                   <li key={index} className={styles.checkItem}>
-                    <svg className={styles.checkIcon}>
+                    <svg
+                      className={styles.checkIcon}
+                      aria-hidden="true"
+                      focusable="false"
+                    >
                       <use href="/images/sprite.svg#icon-check-circle" />
                     </svg>
                     {item}
                   </li>
                 ))}
               </ul>
-            </div>
+            </section>
           )}
 
-          <div className={styles.section}>
-            <h3 className={styles.sectionTitle}>Car Specifications:</h3>
+          <section className={styles.section} aria-labelledby="car-specifications-title">
+            <h2 id="car-specifications-title" className={styles.sectionTitle}>
+              Car Specifications:
+            </h2>
 
             <ul className={styles.list}>
               <li className={styles.specItem}>
-                <svg className={styles.specIcon}>
+                <svg
+                  className={styles.specIcon}
+                  aria-hidden="true"
+                  focusable="false"
+                >
                   <use href="/images/sprite.svg#icon-calendar" />
                 </svg>
                 Year: {car.year}
               </li>
 
               <li className={styles.specItem}>
-                <svg className={styles.specIcon}>
+                <svg
+                  className={styles.specIcon}
+                  aria-hidden="true"
+                  focusable="false"
+                >
                   <use href="/images/sprite.svg#icon-car" />
                 </svg>
                 Type: {car.type}
               </li>
 
               <li className={styles.specItem}>
-                <svg className={styles.specIcon}>
+                <svg
+                  className={styles.specIcon}
+                  aria-hidden="true"
+                  focusable="false"
+                >
                   <use href="/images/sprite.svg#icon-fuel-pump" />
                 </svg>
                 Fuel Consumption: {car.fuelConsumption}
               </li>
 
               <li className={styles.specItem}>
-                <svg className={styles.specIcon}>
+                <svg
+                  className={styles.specIcon}
+                  aria-hidden="true"
+                  focusable="false"
+                >
                   <use href="/images/sprite.svg#icon-gear" />
                 </svg>
                 Engine Size: {car.engineSize}
               </li>
             </ul>
-          </div>
+          </section>
 
           {(car.accessories?.length || car.functionalities?.length) && (
-            <div className={styles.section}>
-              <h3 className={styles.sectionTitle}>
+            <section
+              className={styles.section}
+              aria-labelledby="car-accessories-title"
+            >
+              <h2 id="car-accessories-title" className={styles.sectionTitle}>
                 Accessories and functionalities:
-              </h3>
+              </h2>
 
               <ul className={styles.list}>
                 {car.accessories?.map((item, index) => (
                   <li key={index} className={styles.checkItem}>
-                    <svg className={styles.checkIcon}>
+                    <svg
+                      className={styles.checkIcon}
+                      aria-hidden="true"
+                      focusable="false"
+                    >
                       <use href="/images/sprite.svg#icon-check-circle" />
                     </svg>
                     {item}
@@ -127,17 +162,21 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car }) => {
 
                 {car.functionalities?.map((item, index) => (
                   <li key={`f-${index}`} className={styles.checkItem}>
-                    <svg className={styles.checkIcon}>
+                    <svg
+                      className={styles.checkIcon}
+                      aria-hidden="true"
+                      focusable="false"
+                    >
                       <use href="/images/sprite.svg#icon-check-circle" />
                     </svg>
                     {item}
                   </li>
                 ))}
               </ul>
-            </div>
+            </section>
           )}
         </div>
       </div>
-    </div>
+    </article>
   );
 };

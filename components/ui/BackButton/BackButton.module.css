@@ -1,0 +1,28 @@
+.back {
+  position: absolute;
+  top: -42px;
+  left: 20px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--main);
+  text-decoration: none;
+}
+
+.backIcon {
+  width: 16px;
+  height: 16px;
+  fill: var(--main);
+}
+
+.back:hover {
+  color: var(--button);
+}
+
+.back:hover .backIcon {
+  fill: var(--button);
+}

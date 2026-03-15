@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ROUTES } from '@/constants/routes';
-import { Button } from '@/components/ui/Button/Button';
+import buttonStyles from '@/components/ui/Button/Button.module.css';
 import styles from './Hero.module.css';
 
 export const Hero: React.FC = () => {
@@ -18,8 +18,11 @@ export const Hero: React.FC = () => {
               car today
             </p>
 
-            <Link href={ROUTES.CATALOG}>
-              <Button variant="primary">View Catalog</Button>
+            <Link
+              href={ROUTES.CATALOG}
+              className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.medium}`}
+            >
+              View Catalog
             </Link>
           </div>
         </div>

@@ -1,10 +1,10 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import type { Car, CarsFilters } from '@/types/car';
 import { carsService } from '@/lib/api/cars.service';
 
 interface CarsStore {
   cars: Car[];
-  selectedCar: Car | null;
   brands: string[];
   filters: CarsFilters;
   favorites: string[];
@@ -16,24 +16,21 @@ interface CarsStore {
   error: string | null;
 
   fetchCars: (page?: number) => Promise<void>;
-  fetchCarById: (id: string) => Promise<void>;
   fetchBrands: () => Promise<void>;
 
   setFilters: (filters: CarsFilters) => Promise<void>;
-  resetFilters: () => void;
 
   loadMoreCars: () => Promise<void>;
 
   toggleFavorite: (carId: string) => void;
-  isFavorite: (carId: string) => boolean;
-  loadFavorites: () => void;
 }
 
 const ITEMS_PER_PAGE = 12;
 
-export const useCarsStore = create<CarsStore>((set, get) => ({
+export const useCarsStore = create<CarsStore>()(
+  persist(
+    (set, get) => ({
   cars: [],
-  selectedCar: null,
   brands: [],
   filters: {},
   favorites: [],
@@ -73,24 +70,6 @@ export const useCarsStore = create<CarsStore>((set, get) => ({
     }
   },
 
-  fetchCarById: async (id: string) => {
-    try {
-      set({ loading: true, error: null, selectedCar: null });
-
-      const car = await carsService.getCarById(id);
-
-      set({
-        selectedCar: car,
-        loading: false,
-      });
-    } catch (error) {
-      set({
-        error: error instanceof Error ? error.message : 'Failed to fetch car',
-        loading: false,
-      });
-    }
-  },
-
   fetchBrands: async () => {
     try {
       const brands = await carsService.getBrands();
@@ -111,14 +90,6 @@ export const useCarsStore = create<CarsStore>((set, get) => ({
     });
 
     await get().fetchCars(1);
-  },
-
-  resetFilters: () => {
-    set({
-      filters: {},
-      cars: [],
-      page: 1,
-    });
   },
 
   loadMoreCars: async () => {
@@ -144,28 +115,16 @@ export const useCarsStore = create<CarsStore>((set, get) => ({
       updated = [...favorites, carId];
     }
 
-    localStorage.setItem('favorites', JSON.stringify(updated));
-
     set({ favorites: updated });
   },
 
-  isFavorite: (carId: string) => {
-    return get().favorites.includes(carId);
-  },
-
-  loadFavorites: () => {
-    const stored = localStorage.getItem('favorites');
-
-    if (!stored) return;
-
-    try {
-      const parsed: string[] = JSON.parse(stored);
-
-      if (Array.isArray(parsed)) {
-        set({ favorites: parsed });
-      }
-    } catch {
-      set({ favorites: [] });
+    }),
+    {
+      name: 'cars-store',
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        favorites: state.favorites,
+      }),
     }
-  },
-}));
+  )
+);

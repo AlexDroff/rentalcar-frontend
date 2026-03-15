@@ -6,18 +6,39 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   error?: string;
 }
 
-export const Input = ({ label, error, className, ...props }: InputProps) => {
+export const Input = ({ label, error, className, id, ...props }: InputProps) => {
   const classes = [styles.input, error ? styles.error : '', className ?? '']
     .filter(Boolean)
     .join(' ');
 
+  const errorId = id && error ? `${id}-error` : undefined;
+
   return (
     <div className={styles.wrapper}>
-      {label && <label className={styles.label}>{label}</label>}
+      {label && (
+        <label className={styles.label} htmlFor={id}>
+          {label}
+        </label>
+      )}
 
-      <input className={classes} {...props} />
+      <input
+        id={id}
+        className={classes}
+        aria-describedby={errorId}
+        {...(error ? { 'aria-invalid': 'true' } : {})}
+        {...props}
+      />
 
-      {error && <span className={styles.errorMessage}>{error}</span>}
+      {error && (
+        <span
+          id={errorId}
+          className={styles.errorMessage}
+          role="alert"
+          aria-live="polite"
+        >
+          {error}
+        </span>
+      )}
     </div>
   );
 };

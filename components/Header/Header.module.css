@@ -27,3 +27,19 @@
 .navigationLink:hover {
   color: var(--button);
 }
+
+@media (max-width: 767px) {
+  .header {
+    padding-block: 18px;
+  }
+
+  .header :global(.container) {
+    gap: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navigation {
+    gap: 20px;
+  }
+}

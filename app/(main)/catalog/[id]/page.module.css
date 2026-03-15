@@ -5,14 +5,40 @@
 }
 
 .content {
-  display: grid;
-  grid-template-columns: 1fr 350px;
-  gap: 40px;
-  max-width: 1200px;
+  position: relative;
+  max-width: 1184px;
   margin: 0 auto;
-  padding: 0 20px;
 }
 
-.form {
-  width: 100%;
+.back {
+  position: absolute;
+  top: -42px;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--main);
+  text-decoration: none;
+}
+
+@media (max-width: 1023px) {
+  .container {
+    padding-top: 72px;
+    padding-bottom: 72px;
+  }
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding-top: 48px;
+    padding-bottom: 56px;
+  }
+
+  .back {
+    position: static;
+    margin-bottom: 20px;
+  }
 }

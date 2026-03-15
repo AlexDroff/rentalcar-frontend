@@ -2,12 +2,12 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Button } from '@/components/ui/Button/Button';
 import { ROUTES } from '@/constants/routes';
 import { useCarsStore } from '@/lib/store/cars.store';
 import { formatMileage, parseAddress } from '@/utils/format';
 import { getSafeImage } from '@/utils/image';
 import type { Car } from '@/types/car';
+import buttonStyles from '@/components/ui/Button/Button.module.css';
 import styles from './CarCard.module.css';
 
 interface CarCardProps {
@@ -23,7 +23,7 @@ export const CarCard: React.FC<CarCardProps> = ({ car }) => {
   const imageSrc = getSafeImage(car.img);
 
   return (
-    <div className={styles.card}>
+    <article className={styles.card}>
       <div className={styles.imageWrapper}>
         <Image
           src={imageSrc}
@@ -36,7 +36,8 @@ export const CarCard: React.FC<CarCardProps> = ({ car }) => {
           type="button"
           onClick={() => toggleFavorite(car.id)}
           className={styles.favorite}
-          aria-label="favorite"
+          aria-label={favorite ? 'Remove from favorites' : 'Add to favorites'}
+          {...{ 'aria-pressed': favorite ? 'true' : 'false' }}
         >
           {favorite ? (
             <svg className={styles.favoriteIconFilled}>
@@ -71,12 +72,13 @@ export const CarCard: React.FC<CarCardProps> = ({ car }) => {
           <span>{mileage} km</span>
         </p>
 
-        <Link href={ROUTES.CAR_DETAILS(car.id)}>
-          <Button variant="primary" fullWidth>
-            Read more
-          </Button>
+        <Link
+          href={ROUTES.CAR_DETAILS(car.id)}
+          className={`${buttonStyles.button} ${buttonStyles.primary} ${buttonStyles.large} ${buttonStyles.fullWidth}`}
+        >
+          Read more
         </Link>
       </div>
-    </div>
+    </article>
   );
 };

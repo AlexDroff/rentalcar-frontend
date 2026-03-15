@@ -1,5 +1,5 @@
 export const getSafeImage = (url?: string): string => {
-  const fallback = '/images/car-placeholder.jpg';
+  const fallback = '/images/car-placeholder.svg';
 
   if (!url) return fallback;
 

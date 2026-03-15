@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { CarFilters } from '@/components/catalog/CarFilters/CarFilters';
 import { CarList } from '@/components/catalog/CarList/CarList';
 import { LoadMoreButton } from '@/components/catalog/LoadMoreButton/LoadMoreButton';
+import { ErrorState } from '@/components/ui/ErrorState/ErrorState';
 import { useCarsStore } from '@/lib/store/cars.store';
 import type { CarsFilters } from '@/types/car';
 
@@ -15,7 +16,6 @@ export default function CatalogPageClient() {
   const brands = useCarsStore((state) => state.brands);
 
   const fetchBrands = useCarsStore((state) => state.fetchBrands);
-  const loadFavorites = useCarsStore((state) => state.loadFavorites);
 
   const loadMoreCars = useCarsStore((state) => state.loadMoreCars);
   const setFilters = useCarsStore((state) => state.setFilters);
@@ -28,14 +28,25 @@ export default function CatalogPageClient() {
   useEffect(() => {
     setFilters({});
     fetchBrands();
-    loadFavorites();
-  }, [fetchBrands, loadFavorites, setFilters]);
+  }, [fetchBrands, setFilters]);
 
   return (
     <div className="container catalogPage">
       <CarFilters brands={brands} onFilter={handleFilter} />
 
-      {error && <div className="error">{error}</div>}
+      {error && cars.length === 0 && (
+        <ErrorState
+          title="Unable to load the catalog"
+          message={error}
+        />
+      )}
+
+      {error && cars.length > 0 && (
+        <ErrorState
+          title="Some content may be outdated"
+          message={error}
+        />
+      )}
 
       <CarList cars={cars} loading={loading && cars.length === 0} />
 

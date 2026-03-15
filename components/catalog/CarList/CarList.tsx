@@ -11,14 +11,15 @@ interface CarListProps {
 }
 
 export const CarList: React.FC<CarListProps> = ({ cars, loading = false }) => {
-  // Skeleton loading
   if (loading && cars.length === 0) {
     return (
-      <div className={styles.grid}>
+      <ul className={styles.grid} aria-label="Cars loading">
         {Array.from({ length: 8 }).map((_, index) => (
-          <SkeletonCard key={index} />
+          <li key={index} className={styles.item}>
+            <SkeletonCard />
+          </li>
         ))}
-      </div>
+      </ul>
     );
   }
 
@@ -30,12 +31,13 @@ export const CarList: React.FC<CarListProps> = ({ cars, loading = false }) => {
     );
   }
 
-  // Normal render
   return (
-    <div className={styles.grid}>
+    <ul className={styles.grid} aria-label="Cars catalog">
       {cars.map((car) => (
-        <CarCard key={car.id} car={car} />
+        <li key={car.id} className={styles.item}>
+          <CarCard car={car} />
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };

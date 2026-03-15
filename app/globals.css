@@ -88,6 +88,7 @@ ol {
 .container {
   max-width: 1184px;
   margin: 0 auto;
+  padding-inline: 20px;
 }
 
 /* typography */
@@ -136,4 +137,22 @@ ol {
 .catalogPage {
   padding-bottom: 124px;
   padding-top: 84px;
+}
+
+@media (max-width: 1023px) {
+  .catalogPage {
+    padding-top: 64px;
+    padding-bottom: 96px;
+  }
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding-inline: 16px;
+  }
+
+  .catalogPage {
+    padding-top: 40px;
+    padding-bottom: 72px;
+  }
 }
