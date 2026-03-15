@@ -86,5 +86,5 @@ Open `http://localhost:3000` in your browser.
 
 ### Author
 
-- **Name**: Oleksandr Droff
+- **Name**: Oleksandr Aleksandrov
 - **GitHub**: [AlexDroff](https://github.com/AlexDroff)
