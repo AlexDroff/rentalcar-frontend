@@ -7,7 +7,8 @@ import styles from './CarFilters.module.css';
 
 interface CarFiltersProps {
   brands: string[];
-  onFilter: (filters: CarsFilters) => void;
+  onSearch: (filters: CarsFilters) => void;
+  onReset: () => void;
 }
 
 const formatNumber = (value: string) => {
@@ -16,7 +17,11 @@ const formatNumber = (value: string) => {
   return Number(num).toLocaleString('en-US');
 };
 
-export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
+export const CarFilters: React.FC<CarFiltersProps> = ({
+  brands,
+  onSearch,
+  onReset,
+}) => {
   const [filters, setFilters] = useState<CarsFilters>({});
   const [openDropdown, setOpenDropdown] = useState<'brand' | 'price' | null>(
     null
@@ -84,13 +89,13 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onFilter(filters);
+    onSearch(filters);
   };
 
   const handleReset = () => {
     setFilters({});
     setOpenDropdown(null);
-    onFilter({});
+    onReset();
   };
 
   return (
@@ -272,7 +277,6 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
           <Button type="submit" variant="primary" size="small">
             Search
           </Button>
-          {/* Added: reset button clears all filters and reuses existing filter flow */}
           <Button
             type="button"
             variant="outlined"

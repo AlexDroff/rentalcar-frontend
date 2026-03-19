@@ -20,6 +20,13 @@ export default function CatalogPageClient() {
   const [error, setError] = useState<string | null>(null);
   const requestIdRef = useRef(0);
 
+  const resetCatalogState = useCallback(() => {
+    // Clear the current list and restart pagination before a fresh query.
+    setCars([]);
+    setPage(1);
+    setTotalPages(1);
+  }, []);
+
   const fetchCatalogCars = useCallback(
     async (nextFilters: CarsFilters, pageNum: number, replaceCars: boolean) => {
       const requestId = ++requestIdRef.current;
@@ -27,6 +34,9 @@ export default function CatalogPageClient() {
       try {
         setLoading(true);
         setError(null);
+        // Keep the active query in state immediately so "Load more" always uses
+        // the latest filters after search/reset.
+        setFilters(nextFilters);
 
         const response = await carsService.getCars(
           nextFilters,
@@ -41,9 +51,12 @@ export default function CatalogPageClient() {
         setCars((prev) =>
           replaceCars ? response.cars : [...prev, ...response.cars]
         );
-        setPage(response.page);
+        // Root cause: pagination state was tied to async response values while
+        // "Load more" derives the next request from React state. Advancing the
+        // page from the previous local value keeps the UI and the request flow
+        // in sync after search/reset and avoids stale page state.
+        setPage((prev) => (replaceCars ? 1 : prev + 1));
         setTotalPages(response.totalPages);
-        setFilters(nextFilters);
       } catch (fetchError) {
         if (requestId !== requestIdRef.current) {
           return;
@@ -74,22 +87,31 @@ export default function CatalogPageClient() {
     }
   }, []);
 
-  const handleFilter = useCallback(
+  const handleSearch = useCallback(
     async (nextFilters: CarsFilters) => {
-      setCars([]);
-      setPage(1);
-      setTotalPages(1);
+      // A new search must restart from page 1 and replace the current results.
+      resetCatalogState();
       await fetchCatalogCars(nextFilters, 1, true);
     },
-    [fetchCatalogCars]
+    [fetchCatalogCars, resetCatalogState]
   );
+
+  const handleReset = useCallback(async () => {
+    // Reset returns the catalog to the default dataset and restarts pagination.
+    resetCatalogState();
+    await fetchCatalogCars({}, 1, true);
+  }, [fetchCatalogCars, resetCatalogState]);
 
   const handleLoadMore = useCallback(async () => {
     if (loading || page >= totalPages) {
       return;
     }
 
-    await fetchCatalogCars(filters, page + 1, false);
+    const nextPage = page + 1;
+
+    // Pagination should request the next page for the active filters and append
+    // the new results instead of replacing the current list.
+    await fetchCatalogCars(filters, nextPage, false);
   }, [fetchCatalogCars, filters, loading, page, totalPages]);
 
   useEffect(() => {
@@ -99,8 +121,12 @@ export default function CatalogPageClient() {
 
   return (
     <div className="container catalogPage">
-      <CarFilters brands={brands} onFilter={handleFilter} />
-
+      <CarFilters
+        brands={brands}
+        onSearch={handleSearch}
+        onReset={handleReset}
+      />
+ 
       {error && cars.length === 0 && (
         <ErrorState
           title="Unable to load the catalog"
