@@ -161,6 +161,7 @@
 .actions {
   display: flex;
   align-items: flex-end;
+  gap: 8px;
 }
 
 @media (min-width: 768px) {

@@ -18,7 +18,9 @@ const formatNumber = (value: string) => {
 
 export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
   const [filters, setFilters] = useState<CarsFilters>({});
-  const [openDropdown, setOpenDropdown] = useState<'brand' | 'price' | null>(null);
+  const [openDropdown, setOpenDropdown] = useState<'brand' | 'price' | null>(
+    null
+  );
   const formRef = useRef<HTMLFormElement>(null);
   const priceOptions = useMemo(() => [30, 40, 50, 60, 70, 80], []);
 
@@ -85,6 +87,12 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
     onFilter(filters);
   };
 
+  const handleReset = () => {
+    setFilters({});
+    setOpenDropdown(null);
+    onFilter({});
+  };
+
   return (
     <section className={styles.filters} aria-label="Catalog filters">
       <form className={styles.form} onSubmit={handleSubmit} ref={formRef}>
@@ -101,19 +109,26 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
               onClick={() =>
                 setOpenDropdown((prev) => (prev === 'brand' ? null : 'brand'))
               }
-              aria-haspopup="listbox"
               aria-controls="brand-options"
             >
               <span
-                className={filters.brand ? styles.triggerValue : styles.placeholder}
+                className={
+                  filters.brand ? styles.triggerValue : styles.placeholder
+                }
               >
                 {filters.brand || 'Choose a brand'}
               </span>
 
-              <svg className={styles.selectIcon} aria-hidden="true" focusable="false">
+              <svg
+                className={styles.selectIcon}
+                aria-hidden="true"
+                focusable="false"
+              >
                 <use
                   href={`/images/sprite.svg#${
-                    openDropdown === 'brand' ? 'icon-arrow_up' : 'icon-arrow_down'
+                    openDropdown === 'brand'
+                      ? 'icon-arrow_up'
+                      : 'icon-arrow_down'
                   }`}
                 />
               </svg>
@@ -123,7 +138,6 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
               <ul
                 id="brand-options"
                 className={styles.options}
-                role="listbox"
                 aria-label="Car brand options"
               >
                 {brands.map((brand) => (
@@ -157,7 +171,6 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
               onClick={() =>
                 setOpenDropdown((prev) => (prev === 'price' ? null : 'price'))
               }
-              aria-haspopup="listbox"
               aria-controls="price-options"
             >
               <span
@@ -170,10 +183,16 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
                   : 'Choose a price'}
               </span>
 
-              <svg className={styles.selectIcon} aria-hidden="true" focusable="false">
+              <svg
+                className={styles.selectIcon}
+                aria-hidden="true"
+                focusable="false"
+              >
                 <use
                   href={`/images/sprite.svg#${
-                    openDropdown === 'price' ? 'icon-arrow_up' : 'icon-arrow_down'
+                    openDropdown === 'price'
+                      ? 'icon-arrow_up'
+                      : 'icon-arrow_down'
                   }`}
                 />
               </svg>
@@ -183,7 +202,6 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
               <ul
                 id="price-options"
                 className={styles.options}
-                role="listbox"
                 aria-label="Price options"
               >
                 {priceOptions.map((price) => {
@@ -191,15 +209,17 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
 
                   return (
                     <li key={price}>
-                    <button
-                      type="button"
-                      className={`${styles.option} ${
-                          filters.rentalPrice === priceStr ? styles.optionActive : ''
-                      }`}
-                      onClick={() => handlePriceSelect(priceStr)}
-                    >
+                      <button
+                        type="button"
+                        className={`${styles.option} ${
+                          filters.rentalPrice === priceStr
+                            ? styles.optionActive
+                            : ''
+                        }`}
+                        onClick={() => handlePriceSelect(priceStr)}
+                      >
                         {price}
-                    </button>
+                      </button>
                     </li>
                   );
                 })}
@@ -221,7 +241,9 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
                 id="min-mileage"
                 type="text"
                 inputMode="numeric"
-                value={filters.minMileage ? formatNumber(filters.minMileage) : ''}
+                value={
+                  filters.minMileage ? formatNumber(filters.minMileage) : ''
+                }
                 onChange={handleMinMileageChange}
                 className={styles.mileageInput}
               />
@@ -236,7 +258,9 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
                 id="max-mileage"
                 type="text"
                 inputMode="numeric"
-                value={filters.maxMileage ? formatNumber(filters.maxMileage) : ''}
+                value={
+                  filters.maxMileage ? formatNumber(filters.maxMileage) : ''
+                }
                 onChange={handleMaxMileageChange}
                 className={styles.mileageInput}
               />
@@ -247,6 +271,15 @@ export const CarFilters: React.FC<CarFiltersProps> = ({ brands, onFilter }) => {
         <div className={styles.actions}>
           <Button type="submit" variant="primary" size="small">
             Search
+          </Button>
+          {/* Added: reset button clears all filters and reuses existing filter flow */}
+          <Button
+            type="button"
+            variant="outlined"
+            size="small"
+            onClick={handleReset}
+          >
+            Reset
           </Button>
         </div>
       </form>
