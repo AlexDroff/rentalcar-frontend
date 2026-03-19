@@ -12,9 +12,13 @@ import styles from './CarCard.module.css';
 
 interface CarCardProps {
   car: Car;
+  isLcpCandidate?: boolean;
 }
 
-export const CarCard: React.FC<CarCardProps> = ({ car }) => {
+export const CarCard: React.FC<CarCardProps> = ({
+  car,
+  isLcpCandidate = false,
+}) => {
   const toggleFavorite = useFavoritesStore((state) => state.toggleFavorite);
   const favorite = useFavoritesStore((state) => state.isFavorite(car.id));
 
@@ -29,6 +33,14 @@ export const CarCard: React.FC<CarCardProps> = ({ car }) => {
           src={imageSrc}
           alt={`${car.brand} ${car.model}`}
           fill
+          // Root cause: the first visible catalog image can become the page LCP,
+          // but it was still using the default lazy behavior. Load only that
+          // above-the-fold image eagerly and keep the rest lazy.
+          loading={isLcpCandidate ? 'eager' : 'lazy'}
+          // The card image uses `fill`, so `sizes` must describe the grid width
+          // for each breakpoint. This lets Next.js choose an appropriately sized
+          // image instead of assuming a full-viewport width.
+          sizes="(max-width: 599px) 100vw, (max-width: 899px) calc((100vw - 24px) / 2), (max-width: 1183px) calc((100vw - 48px) / 3), calc((100vw - 72px) / 4)"
           className={styles.image}
         />
 

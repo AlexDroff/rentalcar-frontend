@@ -33,9 +33,9 @@ export const CarList: React.FC<CarListProps> = ({ cars, loading = false }) => {
 
   return (
     <ul className={styles.grid} aria-label="Cars catalog">
-      {cars.map((car) => (
+      {cars.map((car, index) => (
         <li key={car.id} className={styles.item}>
-          <CarCard car={car} />
+          <CarCard car={car} isLcpCandidate={index === 0} />
         </li>
       ))}
     </ul>
