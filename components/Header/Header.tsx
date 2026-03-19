@@ -18,7 +18,7 @@ export const Header = () => {
             alt="RentalCar logo"
             width={104}
             height={16}
-            priority
+            loading="eager"
           />
         </Link>
         <nav aria-label="Main navigation">

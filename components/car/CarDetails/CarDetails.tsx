@@ -22,6 +22,8 @@ export const CarDetails: React.FC<CarDetailsProps> = ({ car }) => {
           alt={`${car.brand} ${car.model}`}
           width={640}
           height={512}
+          // The main details image is above the fold on the details page.
+          loading="eager"
           className={styles.image}
         />
 

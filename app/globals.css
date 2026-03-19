@@ -76,6 +76,7 @@ input::placeholder {
 img {
   display: block;
   max-width: 100%;
+  height: auto;
 }
 
 /* lists */
